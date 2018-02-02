@@ -1,0 +1,124 @@
+#!/bin/bash
+# cd `dirname $0`
+# sshpass -e ssh -o ProxyCommand="nc -x 192.168.2.8:7070 %h %p" chenkairui@192.168.3.19 -p 23000
+
+# ########################################################
+# Filename : shidc
+# Message  : 简化连接
+# Revision : 1.0
+# Log      :
+# Owner    : Way
+# TEL      : 18124670369
+# Update   : 2018-01-11
+# Setup	   : 
+#   yum install -y sshpass
+#   echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
+#   echo "export SSHPASS=\"FyuEj0N8zldgUQOvIIIi\"" >> ~/.bashrc
+#	source ~/.bashrc
+#   ln -s /home/way/shell/shidc /usr/local/bin/idc
+#   cat config >> ~/.ssh/config
+# Usage    : 
+#		# 查看使用说明
+#		idc
+#		# ssh host
+#		idc hostname
+#		# scp file user@host:/dirname/file
+#		idc hostname scp file host:/dirname/file
+#
+# ########################################################
+# Revision : 1.1
+# Log      :
+#   1. 添加 pass 和 help 两个文件;
+#   2. pass 文件用于更新和查看服务器对应的密码;
+#   3. help 文件保存host信息;
+#   4. 输入 idc host pass 即可直接查看对应的密码
+# Owner    : Way
+# TEL      : 18124670369
+# Update   : 2018-01-29
+# Usage    : 
+#		# 查看使用说明
+#		idc
+#		# ssh host
+#		idc hostname
+#		# scp file user@host:/dirname/file
+#		idc hostname scp file host:/dirname/file
+#       # 查看password
+#       idc hostname pass
+# ########################################################
+
+help(){
+	cat help
+	exit
+}
+
+	# 获取脚本真正目录
+	SOURCE="$0"
+	while [ -h "$SOURCE"  ]; do
+	    DIR="$( cd -P "$( dirname "$SOURCE"  )" && pwd  )"
+	    SOURCE="$(readlink "$SOURCE")"
+	    [[ $SOURCE != /*  ]] && SOURCE="$DIR/$SOURCE"
+	done
+	DIR="$( cd -P "$( dirname "$SOURCE"  )" && pwd  )"
+	cd $DIR
+	
+	# 定义颜色
+	DEFAULT='\e[0m'
+	GREEN='\e[32m'
+	RED='\e[31m'
+	
+	# 不带参数则显示帮助
+	if [ $# -eq 0 ];then
+		help
+	fi
+	
+	# 只带IP，则只走ssh
+	ip=$1
+	if [ $# -eq 1 ];then
+		command="ssh $ip"
+	else
+	# 按命令操作，如：scp
+		shift
+		command="$*"
+	fi
+
+show_pass(){
+	host=$1
+	pass=`grep -w $host pass | awk '{print $2}'`
+	echo -e "Host: ${GREEN}$host${DEFAULT}   Password: ${GREEN}$pass${DEFAULT}"
+	exit
+}
+######################################
+# 程序开始
+case $ip in
+# 杭州IDC
+1.*)
+	test "a$1" = "apass" && show_pass hz
+    cd - > /dev/null && sshpass -e $command
+	;;
+# 中山IDC
+3.*)
+	test "a$1" = "apass" && show_pass zs
+    cd - > /dev/null && sshpass -e $command
+	;;
+# docker 
+0.*)
+	test "a$1" = "apass" && show_pass docker
+	pass=`grep -w docker pass | awk '{print $2}'`
+	cd - > /dev/null && sshpass -p $pass $command
+	;;
+# 本地
+2.*|vm|op)
+	if grep -wq $ip pass;then
+		pass=`grep -w $ip pass | awk '{print $2}'`
+	else
+		echo -e "${RED}\nHostname: $ip  No exists...\n${DEFAULT}"
+		help
+	fi
+	test "a$1" = "apass" && show_pass $ip
+	cd - > /dev/null && sshpass -p $pass $command
+	;;
+*)
+	echo -e "${RED}\nHostname: $ip  No exists...\n${DEFAULT}"
+	help
+	;;
+esac

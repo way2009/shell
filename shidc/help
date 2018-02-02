@@ -1,0 +1,22 @@
+Usage: idc hostname
+
+  host list:
+
+    中山IDC:                        内部:								
+        3.10 => DB_m                    2.5  => iso
+        3.11 => DB_s                    2.6  => dev
+        3.12 => proxy-2                 2.9  => test
+        3.13 => proxy-1                 2.8  => svn|mysqlproxy|pms
+        3.14 => xyxb2                   2.14 => xenserver
+        3.15 => xyxb1                   2.50 => kvm
+        3.16 => xyepd-2                 2.51 => kvm|zabbix
+        3.17 => oa-zabbix            
+        3.18 => xyepd-1             杭州IDC:
+        3.19 => 预发布                  1.25 => 发布
+        3.20 => pinwei-2                1.13 => 代理(new)
+        3.21 => img-1                   1.27 => 代理(new)
+        3.22 => pinwei-1                1.38 => 代理
+        3.23 => img-2           
+        3.24 => backup
+        3.61 => 人才DB
+

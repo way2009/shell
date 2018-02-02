@@ -1,0 +1,57 @@
+# 中山机房
+Host 3.24
+  ProxyCommand nc -x 192.168.2.8:7070 %h %p
+  Hostname 192.168.%h
+  Port 22
+  User chenkairui
+  StrictHostKeyChecking no
+Host 3.*
+  ProxyCommand nc -x 192.168.2.8:7070 %h %p
+  Hostname 192.168.%h
+  Port 23000
+  User chenkairui
+  StrictHostKeyChecking no
+
+# 杭州机房
+Host 1.25
+  ProxyCommand nc -x 192.168.2.8:7070 %h %p
+  Hostname 192.168.%h
+  Port 22
+  User chenkairui
+  StrictHostKeyChecking no
+Host 1.60
+  ProxyCommand nc -x 192.168.2.8:7070 %h %p
+  Hostname 192.168.%h
+  Port 22
+  User chenkairui
+  StrictHostKeyChecking no
+Host 1.*
+  ProxyCommand nc -x 192.168.2.8:7070 %h %p
+  Hostname 192.168.%h
+  Port 22000
+  User chenkairui
+  StrictHostKeyChecking no
+
+# docker 环境
+Host 0.*
+  Hostname 172.17.%h
+  Port 22
+  User root
+  StrictHostKeyChecking no
+
+# 本地机器
+Host vm
+  Hostname 192.168.5.70
+  Port 22
+  User root
+  StrictHostKeyChecking no
+Host op
+  Hostname 192.168.5.70
+  Port 8888
+  User diexun_op
+  StrictHostKeyChecking no
+Host 2.*
+  Hostname 192.168.%h
+  Port 22
+  User root
+  StrictHostKeyChecking no
